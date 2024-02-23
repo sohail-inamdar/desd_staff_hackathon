@@ -21,16 +21,40 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+#include <string.h>
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+typedef struct {
+	int16_t x, y, z;
+}LIS3DSH_Data;
 
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define BV(n) (1<<(n))
+
+#define LIS3DSH_CONTROL_REG4_ADDR	0x20
+#define LIS3DSH_STATUS_REG_ADDR		0x27
+#define LIS3DSH_OUT_XL_ADDR			0x28
+#define LIS3DSH_OUT_YL_ADDR			0x2A
+#define LIS3DSH_OUT_ZL_ADDR			0x2C
+
+#define LIS3DSH_CR4_ODR_OFF			(0x00 << 4)
+#define LIS3DSH_CR4_ODR_25HZ		(0x04 << 4)
+#define LIS3DSH_CR4_XEN				(BV(0))
+#define LIS3DSH_CR4_YEN				(BV(1))
+#define LIS3DSH_CR4_ZEN				(BV(2))
+
+#define LIS3DSH_SR_XDA				(BV(0))
+#define LIS3DSH_SR_YDA				(BV(1))
+#define LIS3DSH_SR_ZDA				(BV(2))
+#define LIS3DSH_SR_ZYXDA			(BV(3))
+#define LIS3DSH_SR_XYZ_MSK			(LIS3DSH_SR_XDA | LIS3DSH_SR_YDA | LIS3DSH_SR_ZDA)
 
 /* USER CODE END PD */
 
@@ -40,6 +64,9 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+SPI_HandleTypeDef hspi1;
+
+UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
@@ -47,12 +74,64 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_SPI1_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void SPI_Write(uint8_t reg, uint8_t *data, uint8_t size) {
+	// Enable CS (PE3=0)
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+	// Send register (internal) address
+	HAL_SPI_Transmit(&hspi1, &reg, 1, HAL_MAX_DELAY);
+	// Send data of given size
+	HAL_SPI_Transmit(&hspi1, data, size, HAL_MAX_DELAY);
+	// Disable CS (PE3=1)
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+}
+
+void SPI_Read(uint8_t reg, uint8_t *data, int size) {
+	// Enable CS (PE3=0)
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+	// Send register (internal) address (msb=1 for read op with LIS3DSH)
+	reg |= BV(7);
+	HAL_SPI_Transmit(&hspi1, &reg, 1, HAL_MAX_DELAY);
+	// Receive data of given size
+	HAL_SPI_Receive(&hspi1, data, size, HAL_MAX_DELAY);
+	// Disable CS (PE3=1)
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+}
+void LIS3DSH_Init(void) {
+	// cr4 = odr = 25 hz, xen, yen, zen
+	uint8_t val = LIS3DSH_CR4_ODR_25HZ | LIS3DSH_CR4_XEN | LIS3DSH_CR4_YEN | LIS3DSH_CR4_ZEN;
+	SPI_Write(LIS3DSH_CONTROL_REG4_ADDR, &val, 1);
+}
+
+void LIS3DSH_WaitForDataAvail(void) {
+	uint8_t val;
+	// wait while status regr xda, yda and zda bits are zero
+	do {
+		SPI_Read(LIS3DSH_STATUS_REG_ADDR, &val, 1);
+	} while( (val & LIS3DSH_SR_XYZ_MSK) == 0);
+}
+void LIS3DSH_ReadData(LIS3DSH_Data *data) {
+	uint8_t buf[2];
+	// read xl and xh readings and convert to x 16-bit reading
+	SPI_Read(LIS3DSH_OUT_XL_ADDR, buf, 2);
+	data->x = (((uint16_t)buf[1]) << 8) | buf[0];
+
+	// read yl and yh readings and convert to y 16-bit reading
+	SPI_Read(LIS3DSH_OUT_YL_ADDR, buf, 2);
+	data->y = (((uint16_t)buf[1]) << 8) | buf[0];
+
+	// read zl and zh readings and convert to z 16-bit reading
+	SPI_Read(LIS3DSH_OUT_ZL_ADDR, buf, 2);
+	data->z = (((uint16_t)buf[1]) << 8) | buf[0];
+}
 
 /* USER CODE END 0 */
 
@@ -83,14 +162,24 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_SPI1_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  LIS3DSH_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
+  {	  char str[32];
+  LIS3DSH_Data data;
+  LIS3DSH_WaitForDataAvail(); // wait for x, y or z reading to change
+  LIS3DSH_ReadData(&data); // get accel reading
+  sprintf(str, "x=%d, y=%d, z=%d\r\n", data.x, data.y, data.z); // convert reading into string
+  HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), HAL_MAX_DELAY); // send it to uart
+  HAL_Delay(1000);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -142,6 +231,106 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief SPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI1_Init(void)
+{
+
+  /* USER CODE BEGIN SPI1_Init 0 */
+
+  /* USER CODE END SPI1_Init 0 */
+
+  /* USER CODE BEGIN SPI1_Init 1 */
+
+  /* USER CODE END SPI1_Init 1 */
+  /* SPI1 parameter configuration*/
+  hspi1.Instance = SPI1;
+  hspi1.Init.Mode = SPI_MODE_MASTER;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi1.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI1_Init 2 */
+
+  /* USER CODE END SPI1_Init 2 */
+
+}
+
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 9600;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PE3 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
