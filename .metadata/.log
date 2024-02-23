@@ -258,3 +258,15 @@ Caused by: java.lang.NullPointerException
 	at com.st.microxplorer.mcufinder.gui.WebAppUi.getEDAapiFileName(WebAppUi.java:346)
 	at com.st.microxplorer.mcufinder.gui.WebAppUi.<clinit>(WebAppUi.java:130)
 	... 63 more
+!SESSION 2024-02-23 14:33:19.324 -----------------------------------------------
+eclipse.buildId=Version 1.14.0
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_IN
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-02-23 14:33:48.978
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-02-23 14:33:48.979
+!MESSAGE Log4j2 initialized with config file /home/sohail/hackathon/desd_staff_hackathon/.metadata/.log4j2.xml
