@@ -60,8 +60,13 @@ all: main-build
 main-build: mcpi_testing_firmware.elf secondary-outputs
 
 # Tool invocations
+<<<<<<< HEAD
 mcpi_testing_firmware.elf mcpi_testing_firmware.map: $(OBJS) $(USER_OBJS) /home/sunbeam/Desktop/desd_staff_hackathon/mcpi_testing_firmware/STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-gcc -o "mcpi_testing_firmware.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/sunbeam/Desktop/desd_staff_hackathon/mcpi_testing_firmware/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="mcpi_testing_firmware.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+=======
+mcpi_testing_firmware.elf mcpi_testing_firmware.map: $(OBJS) $(USER_OBJS) C:\Users\sunbeam\Desktop\hackathon\desd_staff_hackathon\mcpi_testing_firmware\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "mcpi_testing_firmware.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\sunbeam\Desktop\hackathon\desd_staff_hackathon\mcpi_testing_firmware\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="mcpi_testing_firmware.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+>>>>>>> main
 	@echo 'Finished building target: $@'
 	@echo ' '
 
