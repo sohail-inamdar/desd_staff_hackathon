@@ -197,6 +197,41 @@ int main(void)
   HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), HAL_MAX_DELAY); // send it to uart
   HAL_Delay(1000);
 
+  if(flag==1)
+ 	  {
+ 		  if(lcd16x2_i2c_init(&hi2c1));
+ 		  RTC_TimeTypeDef time;
+ 		  RTC_DateTypeDef date;
+ 		  char str[32];
+ 		  int cnt;
+ 		  HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
+ 		  HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+ 		  cnt = sprintf(str, "%d",
+ 				  date.Date);
+ 		  lcd16x2_i2c_setCursor(0, 0);
+ 		  lcd16x2_i2c_printf(str);
+ 		  cnt = sprintf(str, "%d",
+ 		 				  date.Month);
+ 		 		  lcd16x2_i2c_setCursor(0, 5);
+ 		 		  lcd16x2_i2c_printf(str);
+ 		 	cnt = sprintf(str, "%d",
+ 		 						  date.Year);
+ 		 				  lcd16x2_i2c_setCursor(0, 11);
+ 		 				  lcd16x2_i2c_printf(str);
+ 		  cnt = sprintf(str, "%d",
+ 						  time.Hours);
+ 				  lcd16x2_i2c_setCursor(1, 0);
+ 				  lcd16x2_i2c_printf(str);
+ 			cnt = sprintf(str, "%d",time.Minutes);
+ 								  lcd16x2_i2c_setCursor(1, 5);
+ 								  lcd16x2_i2c_printf(str);
+ 		cnt = sprintf(str, "%d", time.Seconds);
+ 				lcd16x2_i2c_setCursor(1, 11);
+ 			   lcd16x2_i2c_printf(str);
+
+ 	  }
+
+
 
   dacVal = (dacVal + 4) & 0xFF;
   	  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_8B_R, dacVal);

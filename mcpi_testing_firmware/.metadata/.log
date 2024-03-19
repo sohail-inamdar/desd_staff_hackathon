@@ -13,3 +13,75 @@ Command-line arguments:  -os linux -ws gtk -arch x86_64
 
 !ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-02-23 14:32:53.164
 !MESSAGE Started RMI Server, listening on port 41338
+!SESSION 2024-03-19 10:06:59.968 -----------------------------------------------
+eclipse.buildId=Version 1.14.0
+java.version=17.0.8.1
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-03-19 10:07:48.893
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-03-19 10:07:48.913
+!MESSAGE Log4j2 initialized with config file G:\STAFF_HACK\desd_staff_hackathon\mcpi_testing_firmware\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.externaltools 4 0 2024-03-19 10:08:04.062
+!MESSAGE HRESULT: -2147024894
+!STACK 0
+com.sun.jna.platform.win32.Win32Exception: The system cannot find the file specified.
+	at com.sun.jna.platform.win32.Advapi32Util.registryGetStringValue(Advapi32Util.java:741)
+	at com.sun.jna.platform.win32.Advapi32Util.registryGetStringValue(Advapi32Util.java:718)
+	at com.st.stm32cube.ide.mcu.externaltools.stlinkserver.win32.MCUWinExternalEnvResolver.getPath(MCUWinExternalEnvResolver.java:33)
+	at com.st.stm32cube.ide.mcu.externaltools.internal.registry.MCUExternalToolsTool.resolvePath(MCUExternalToolsTool.java:129)
+	at com.st.stm32cube.ide.mcu.externaltools.internal.registry.MCUExternalToolsTool.getLocation(MCUExternalToolsTool.java:267)
+	at com.st.stm32cube.ide.mcu.externaltools.internal.registry.MCUExternalToolsRegistry.getToolPath(MCUExternalToolsRegistry.java:235)
+	at com.st.stm32cube.ide.mcu.externaltools.internal.registry.MCUExternalToolsRegistry.getToolPath(MCUExternalToolsRegistry.java:223)
+	at com.st.stm32cube.ide.mcu.externaltools.internal.registry.MCUExternalToolsRegistry.getSTLinkServerLocation(MCUExternalToolsRegistry.java:255)
+	at com.st.stm32cube.ide.mcu.externaltools.MCUExternalToolsPlugin.getSTLinkServerLocation(MCUExternalToolsPlugin.java:142)
+	at com.st.stm32cube.ide.mcu.externaltools.ui.internal.startup.MCUExternalToolsStartup.doPrint(MCUExternalToolsStartup.java:110)
+	at com.st.stm32cube.ide.mcu.externaltools.ui.internal.startup.MCUExternalToolsStartup$1.run(MCUExternalToolsStartup.java:199)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-03-19 10:08:04.149
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 0 2024-03-19 10:09:35.527
+!MESSAGE Unexpected error loading extension: org.eclipse.equinox.p2.metadata.repository.simpleRepository
+!STACK 0
+java.lang.NullPointerException: Cannot enter synchronized block because "this.browseFileTransferProtocolMap" is null
+	at org.eclipse.ecf.internal.provider.filetransfer.Activator.getBrowseFileTransfer(Activator.java:633)
+	at org.eclipse.ecf.provider.filetransfer.browse.MultiProtocolFileSystemBrowserAdapter.sendBrowseRequest(MultiProtocolFileSystemBrowserAdapter.java:81)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.sendBrowseRequest(FileInfoReader.java:184)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getRemoteFiles(FileInfoReader.java:109)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getRemoteFile(FileInfoReader.java:125)
+	at org.eclipse.equinox.internal.p2.transport.ecf.FileInfoReader.getLastModified(FileInfoReader.java:130)
+	at org.eclipse.equinox.internal.p2.transport.ecf.RepositoryTransport.getLastModified(RepositoryTransport.java:275)
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.getLastModified(CacheManager.java:278)
+	at org.eclipse.equinox.internal.p2.repository.CacheManager.createCache(CacheManager.java:232)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.getLocalFile(SimpleMetadataRepositoryFactory.java:69)
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.load(SimpleMetadataRepositoryFactory.java:89)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:63)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:787)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:685)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository.addChild(CompositeMetadataRepository.java:171)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository.<init>(CompositeMetadataRepository.java:113)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.load(CompositeMetadataRepositoryFactory.java:124)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:63)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:787)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:685)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository.addChild(CompositeMetadataRepository.java:171)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository.<init>(CompositeMetadataRepository.java:113)
+	at org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepositoryFactory.load(CompositeMetadataRepositoryFactory.java:124)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:63)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:787)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:685)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:110)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:105)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:152)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:130)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:78)
