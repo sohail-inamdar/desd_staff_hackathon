@@ -6,7 +6,11 @@
   ******************************************************************************
   * @attention
   *
+<<<<<<< HEAD
+  * Copyright (c) 2023 STMicroelectronics.
+=======
   * Copyright (c) 2024 STMicroelectronics.
+>>>>>>> main
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,19 +27,30 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <string.h>
+#include<math.h>
+<<<<<<< HEAD
+#include "lcd16x2_i2c.h"
+#include "ds1307_for_stm32_hal.h"
 
+
+>>>>>>> main
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+<<<<<<< HEAD
+
 typedef struct {
 	int16_t x, y, z;
 }LIS3DSH_Data;
+>>>>>>> main
 
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+<<<<<<< HEAD
+
 #define BV(n) (1<<(n))
 
 #define LIS3DSH_CONTROL_REG4_ADDR	0x20
@@ -55,6 +70,7 @@ typedef struct {
 #define LIS3DSH_SR_ZDA				(BV(2))
 #define LIS3DSH_SR_ZYXDA			(BV(3))
 #define LIS3DSH_SR_XYZ_MSK			(LIS3DSH_SR_XDA | LIS3DSH_SR_YDA | LIS3DSH_SR_ZDA)
+>>>>>>> main
 
 /* USER CODE END PD */
 
@@ -64,28 +80,52 @@ typedef struct {
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+<<<<<<< HEAD
+ADC_HandleTypeDef hadc2;
+
+I2C_HandleTypeDef hi2c1;
+
+RTC_HandleTypeDef hrtc;
+
+TIM_HandleTypeDef htim2;
+
 DAC_HandleTypeDef hdac;
 
 SPI_HandleTypeDef hspi1;
+>>>>>>> main
 
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+<<<<<<< HEAD
+
+
 volatile uint32_t extint_flag = 0;
+>>>>>>> main
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+<<<<<<< HEAD
+static void MX_TIM2_Init(void);
+static void MX_USART2_UART_Init(void);
+static void MX_RTC_Init(void);
+static void MX_I2C1_Init(void);
+static void MX_ADC2_Init(void);
+
 static void MX_SPI1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_DAC_Init(void);
+>>>>>>> main
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+<<<<<<< HEAD
+
 void SPI_Write(uint8_t reg, uint8_t *data, uint8_t size) {
 	// Enable CS (PE3=0)
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
@@ -135,6 +175,7 @@ void LIS3DSH_ReadData(LIS3DSH_Data *data) {
 	SPI_Read(LIS3DSH_OUT_ZL_ADDR, buf, 2);
 	data->z = (((uint16_t)buf[1]) << 8) | buf[0];
 }
+>>>>>>> main
 
 /* USER CODE END 0 */
 
@@ -146,6 +187,13 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+<<<<<<< HEAD
+	char str[64];
+		int count;
+		RTC_TimeTypeDef time;
+		RTC_DateTypeDef date;
+
+>>>>>>> main
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -166,6 +214,21 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+<<<<<<< HEAD
+  MX_TIM2_Init();
+  MX_USART2_UART_Init();
+  MX_RTC_Init();
+  MX_I2C1_Init();
+  MX_ADC2_Init();
+  /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim2);
+ /* if(lcd16x2_i2c_init(&hi2c1))
+          {
+        	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+          }
+     lcd16x2_i2c_setCursor(0, 0);
+     lcd16x2_i2c_printf("Welcome...!!!");
+=======I*/
   MX_SPI1_Init();
   MX_USART2_UART_Init();
   MX_DAC_Init();
@@ -173,21 +236,27 @@ int main(void)
   HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
 
   LIS3DSH_Init();
+>>>>>>> main
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+<<<<<<< HEAD
+
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+   }
+=======
   uint32_t dacVal = 0;
 
   while (1)
   {
-	while(extint_flag == 0)
+	//while(extint_flag == 0)
 	  ;
-  extint_flag = 0;
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
-  HAL_Delay(500);
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
-
+  /
 
 	  char str[32];
   LIS3DSH_Data data;
@@ -241,6 +310,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
   }
+>>>>>>> main
   /* USER CODE END 3 */
 }
 
@@ -261,9 +331,16 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
+<<<<<<< HEAD
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+>>>>>>> main
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
@@ -291,6 +368,122 @@ void SystemClock_Config(void)
 }
 
 /**
+<<<<<<< HEAD
+  * @brief ADC2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC2_Init(void)
+{
+
+  /* USER CODE BEGIN ADC2_Init 0 */
+
+  /* USER CODE END ADC2_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC2_Init 1 */
+
+  /* USER CODE END ADC2_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc2.Instance = ADC2;
+  hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc2.Init.ScanConvMode = DISABLE;
+  hadc2.Init.ContinuousConvMode = DISABLE;
+  hadc2.Init.DiscontinuousConvMode = DISABLE;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc2.Init.NbrOfConversion = 1;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC2_Init 2 */
+
+  /* USER CODE END ADC2_Init 2 */
+
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+
   * @brief DAC Initialization Function
   * @param None
   * @retval None
@@ -312,10 +505,39 @@ static void MX_DAC_Init(void)
   */
   hdac.Instance = DAC;
   if (HAL_DAC_Init(&hdac) != HAL_OK)
+>>>>>>> main
   {
     Error_Handler();
   }
 
+<<<<<<< HEAD
+  /* USER CODE BEGIN Check_RTC_BKUP */
+
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date
+  */
+  sTime.Hours = 11;
+  sTime.Minutes = 17;
+  sTime.Seconds = 0;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_FRIDAY;
+  sDate.Month = RTC_MONTH_FEBRUARY;
+  sDate.Date = 23;
+  sDate.Year = 24;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
   /** DAC channel OUT1 config
   */
   sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
@@ -327,10 +549,54 @@ static void MX_DAC_Init(void)
   /* USER CODE BEGIN DAC_Init 2 */
 
   /* USER CODE END DAC_Init 2 */
+>>>>>>> main
 
 }
 
 /**
+<<<<<<< HEAD
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 7200;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 4999;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
+
   * @brief SPI1 Initialization Function
   * @param None
   * @retval None
@@ -365,6 +631,7 @@ static void MX_SPI1_Init(void)
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
+>>>>>>> main
 
 }
 
@@ -384,7 +651,11 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
+<<<<<<< HEAD
+  huart2.Init.BaudRate = 115200;
+=======
   huart2.Init.BaudRate = 9600;
+>>>>>>> main
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -408,11 +679,18 @@ static void MX_USART2_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+<<<<<<< HEAD
+=======
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+>>>>>>> main
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+<<<<<<< HEAD
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+=======
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -446,18 +724,41 @@ static void MX_GPIO_Init(void)
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+>>>>>>> main
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+<<<<<<< HEAD
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	HAL_ADC_Start_IT(&hadc1);
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+	char str[16];
+	uint32_t adcVal = HAL_ADC_GetValue(&hadc1);
+	HAL_ADC_Stop(&hadc1);
+	sprintf(str, "Adc: %lu\r\n", adcVal);
+	HAL_UART_Transmit(&huart2, (uint8_t*)str, strlen(str), HAL_MAX_DELAY);
+}
+/* USER CODE END 4 */
+void HAL_ADC_ConvCpltBottomHalf(void) {
+	// blocking code -- deferred execution
+	sprintf(str2, "ADC=%ld\r\n", adcVal);
+	lcd16x2_i2c_setCursor(1, 0);
+	lcd16x2_i2c_printf(str2);
+=======
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	extint_flag = 1;
 }
 
 /* USER CODE END 4 */
+>>>>>>> main
 
 /**
   * @brief  This function is executed in case of error occurrence.
